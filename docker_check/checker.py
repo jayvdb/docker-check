@@ -9,7 +9,7 @@ WINDOWS = sys.platform == 'win32'
 
 def has_dockerenv() -> bool:
     if WINDOWS:
-        if os.path.exists(r'\.dockerenv'):
+        if os.path.exists(os.path.expandvars(r'%SystemDrive%\.dockerenv')):
             return True
 
     return os.path.exists('/.dockerenv')
