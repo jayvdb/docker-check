@@ -4,8 +4,14 @@ import subprocess
 import sys
 import typing as t
 
+WINDOWS = sys.platform == 'win32'
+
 
 def has_dockerenv() -> bool:
+    if WINDOWS:
+        if os.path.exists(r'\.dockerenv'):
+            return True
+
     return os.path.exists('/.dockerenv')
 
 
@@ -20,22 +26,22 @@ def has_docker_in_proc_1_cgroup() -> t.Union[bool, None]:
 
 
 def has_cexecsvc() -> bool:
-    cmd = ["Get-Service", "-Name", "cexecsvc", "-ErrorAction", "SilentlyContinue"]
+    cmd = ['Get-Service', '-Name', 'cexecsvc', '-ErrorAction', 'SilentlyContinue']
     cmd = ' '.join(cmd)
     cmd = base64.b64encode(cmd.encode('utf-16le'))
-    cmd = cmd.decode("utf-8")
+    cmd = cmd.decode('utf-8')
     cmd = 'PowerShell -encodedCommand "{}"'.format(cmd)
     output = subprocess.run(cmd, shell=True)
-    return output
+    print(output)
+    return '<SD> </SD>' in output
 
 
 def is_inside_container() -> t.Union[bool, None]:
-    WINDOWS = sys.platform == "win32"
     if WINDOWS:
         if has_cexecsvc():
             return True
 
-        return False
+        return None
 
     if has_dockerenv():
         return True

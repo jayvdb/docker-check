@@ -1,9 +1,12 @@
 import os
 import subprocess
+import sys
+from unittest import SkipTest
+
 from docker_check import checker
 
 DOCKERIZED = bool(int(os.getenv('DOCKERIZED', 0) or 0))
-
+WINDOWS = sys.platform == 'win32'
 
 if DOCKERIZED:
     # noinspection PyMethodMayBeStatic
@@ -12,6 +15,9 @@ if DOCKERIZED:
             assert checker.has_dockerenv() is True
 
         def test__has_docker_in_proc_1_cgroup(self):
+            if WINDOWS:
+                raise SkipTest
+
             assert checker.has_docker_in_proc_1_cgroup() is True
 
         def test__is_inside_container(self):
@@ -25,6 +31,8 @@ if not DOCKERIZED:
             assert checker.has_dockerenv() is False
 
         def test__has_docker_in_proc_1_cgroup(self):
+            if WINDOWS:
+                raise SkipTest
             assert checker.has_docker_in_proc_1_cgroup() is False
 
         def test__is_inside_container(self):
