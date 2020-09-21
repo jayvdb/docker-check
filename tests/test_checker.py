@@ -33,4 +33,6 @@ if not DOCKERIZED:
         def test_docker(self):
             process = subprocess.Popen(['docker', 'run', '--rm', 'docker_check'], stdout=subprocess.PIPE)
             out, err = process.communicate()
+            print(out)
+            print(err)
             assert b'3 passed' in out
