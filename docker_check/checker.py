@@ -31,9 +31,8 @@ def has_cexecsvc() -> bool:
     cmd = base64.b64encode(cmd.encode('utf-16le'))
     cmd = cmd.decode('utf-8')
     cmd = 'PowerShell -encodedCommand "{}"'.format(cmd)
-    output = subprocess.run(cmd, shell=True)
-    print(output)
-    return '<SD> </SD>' in output
+    result = subprocess.run(cmd, shell=True)
+    return result.returncode == 0
 
 
 def is_inside_container() -> t.Union[bool, None]:

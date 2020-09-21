@@ -43,4 +43,7 @@ if not DOCKERIZED:
             out, err = process.communicate()
             print(out)
             print(err)
-            assert b'3 passed' in out
+            if WINDOWS:
+                assert b'2 passed' in out
+            else:
+                assert b'3 passed' in out
