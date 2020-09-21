@@ -6,6 +6,14 @@ python:
   - 3.6
   - 3.7
   - 3.8
+
+matrix:
+  include:
+    - os: windows
+      language: bash
+      env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
+      before_install: choco install python
+
 install: pip install pytest
 script:
   - ./docker_build.sh
