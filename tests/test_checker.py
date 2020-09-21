@@ -1,7 +1,7 @@
 import os
 import subprocess
 import sys
-from unittest import SkipTest
+import unittest
 
 from docker_check import checker
 
@@ -12,13 +12,19 @@ if DOCKERIZED:
     # noinspection PyMethodMayBeStatic
     class InsideDockerTest:
         def test__has_dockerenv(self):
+            if WINDOWS:
+                raise unittest.SkipTest
             assert checker.has_dockerenv() is True
 
         def test__has_docker_in_proc_1_cgroup(self):
             if WINDOWS:
-                raise SkipTest
-
+                raise unittest.SkipTest
             assert checker.has_docker_in_proc_1_cgroup() is True
+
+        def test__has_cexecsvc(self):
+            if not WINDOWS:
+                raise unittest.SkipTest
+            assert checker.has_cexecsvc() is True
 
         def test__is_inside_container(self):
             assert checker.is_inside_container() is True
@@ -28,12 +34,19 @@ if not DOCKERIZED:
     # noinspection PyMethodMayBeStatic
     class OutsideDockerTest:
         def test__has_dockerenv(self):
+            if WINDOWS:
+                raise unittest.SkipTest
             assert checker.has_dockerenv() is False
 
         def test__has_docker_in_proc_1_cgroup(self):
             if WINDOWS:
-                raise SkipTest
+                raise unittest.SkipTest
             assert checker.has_docker_in_proc_1_cgroup() is False
+
+        def test__has_cexecsvc(self):
+            if not WINDOWS:
+                raise unittest.SkipTest
+            assert checker.has_cexecsvc() is False
 
         def test__is_inside_container(self):
             assert checker.is_inside_container() is None
